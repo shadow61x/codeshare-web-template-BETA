@@ -98,8 +98,8 @@
                                             <tr>
                                                 <th>islemsahip İD</th>
                                                 <th>islem</th>
-                                                <th>adminkontrol</th>
-                                                <th class="text-center dt-no-sorting">İşlem tarihi</th>
+                                                <th>İşlem tarihi</th>
+                                                <th class="text-center dt-no-sorting">İşlemler</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -107,10 +107,13 @@
                                             <tr>
                                                 <td><%= b.islemsahipID %></td>
                                                 <td><%= b.islem %></td>
-                                                <td><%= b.adminkontrol %></td>
+                                                <td><%= b.createdAt %></td>
                                             
                                                 <td class="text-center">
-                                                   <%= b.createdAt %>
+                                                    <td class="text-center">
+                                                        <% if(b.islemkodu == 101){%>  <button onclick="window.location.href='/codes/<%= b._id %>'" id="recovery" class="btn btn-success btn-sm">Görüntüle</button>  <%}%>
+                                                        <% if(b.islemkodu == 100){%>  <button onclick="window.location.href='/admin/panel/codes/recovery/<%= b._id %>'" id="recovery" class="btn btn-success btn-sm">Kodu kurtar</button>  <%}%>
+                                                    </td>
                                                 </td>
                                             </tr>
                                             <% }) %>
@@ -167,10 +170,6 @@
                             }
                            </script>
                         </div></div>
-
-
-
-
 
 
             
