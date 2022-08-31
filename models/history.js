@@ -20,6 +20,18 @@ const historySchema = new Schema({
         type:String,
         require:true
     },
+    kodkurtar:{
+        type:String,
+        require:true
+    },
+    kodİD:{
+        type:String,
+        require:true
+    },
+    islemkodu:{
+        type:Number,
+        require:true
+    },
 
 } , {timestamps:true})
 
