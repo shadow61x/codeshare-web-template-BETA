@@ -16,7 +16,6 @@ const dbuser = require("./models/user.js");
 const dbcodes = require("./models/codes.js");
 const history = require("./models/history.js");
 
-
   passport.serializeUser((user, done) => done(null, user));
   passport.deserializeUser((user, done) => done(null, user));
 
@@ -27,23 +26,21 @@ const history = require("./models/history.js");
     })
   );
 
-  mongoose.connect("MONGO DB URL" , {useNewUrlParser : true , useUnifiedTopology: true})
-.then((result) =>{
-     console.log('mongoDB Bağlantı kuruldu');
-})
-.catch((err) => console.log(err))
-
-
+  mongoose.connect("mongodb+srv://codearmy:code2009@cluster0.juzwe.mongodb.net/codearmy?retryWrites=true&w=majority" , {useNewUrlParser : true , useUnifiedTopology: true})
+  .then((result) =>{
+       console.log('mongoDB Bağlantı kuruldu');
+  })
+  .catch((err) => console.log(err))
   const strategy = new Strategy(
-	{
-	 clientID:"clientID",
-        clientSecret:"clientSecret",
-        callbackURL:"http://localhost:3000/callback",
-     scope: ["identify","guilds.join","guilds"]
-	},
-	(_access_token, _refresh_token, user, done) =>
-		process.nextTick(() => done(null, user)),
-);
+      {
+       clientID:"709847874631892992",
+          clientSecret:"bvvNUl-DHo4lX78fcX0KK-uc8N_mPkiT",
+          callbackURL:"http://localhost:3000/callback",
+       scope: ["identify","guilds.join","guilds"]
+      },
+      (_access_token, _refresh_token, user, done) =>
+          process.nextTick(() => done(null, user)),
+  );
 
 passport.use(strategy);
 
@@ -209,16 +206,62 @@ app.get("/admin/panel/codes/add", checkAuth, async (req, res) => {
 
 });
 
+app.get("/admin/panel/codes/edit/:id", checkAuth, async (req, res) => {
+  let dbuserfind = req.user
+  let codedata = await dbcodes.find({_id:req.params.id});
+  let getuser = await dbuser.findOne({userıd:dbuserfind.id});
+  if(getuser.admin == false)
+  {
+    res.redirect("/admin/err");
+  }
+  else
+  {
+    renderTemplate(res, req, "admin/addcode.ejs", {
+      getuser,
+      codedata
+    });
+  }
+
+
+});
+
+
+app.get("/admin/panel/codes/recovery/:id", checkAuth, async (req, res) => {
+  let dbuserfind = req.user
+  let getuser = await dbuser.findOne({userıd:dbuserfind.id});
+  let recovery = await history.findOne({_id: req.params.id})
+  if(getuser.admin == false)
+  {
+    res.redirect("/admin/err");
+  }else{
+    renderTemplate(res, req, "admin/recovery.ejs", {
+      recovery
+    });
+  }
+
+});
+
+
 
 
 
 // KOD PAYLAŞMA SİSTEMİ //
 app.get("/codes", checkAuth, async (req, res) => {
   let dbuserfind = req.user
-  const sunucu = req.params.ID;
-  let getuser = dbuser.find({userıd:dbuserfind.sunucu});
+  let getuser = dbuser.find({userıd:dbuserfind.id});
   renderTemplate(res, req, "codes/index.ejs", {
   getuser
+});
+});
+
+
+app.get("/codes/:ID", checkAuth, async (req, res) => {
+  let dbuserfind = req.user
+  let koddata = dbcodes.find({_id:req.params.ID});
+  let getuser = dbuser.find({userıd:dbuserfind.id});
+  renderTemplate(res, req, "codes/code.ejs", {
+  getuser,
+  koddata
 });
 });
 
@@ -261,13 +304,62 @@ app.post("/code/add", checkAuth, async (req, res) => {
     islemsahipName: req.user.username,
     islemsahipID:req.user.id,
     islem:`Sisteme kod ekledi Baslık: ${body.codename}`,
-    adminkontrol:getuser.admin
+    adminkontrol:getuser.admin,
+    kodİD:result._id,
+    islemkodu:101
 
  })
  History.save()
 res.redirect("/admin/panel/codes");
 });
 
+});
+
+
+
+app.get("/admin/codes/delete/:id", checkAuth , async (req, res) => {
+  let getuser = await dbuser.findOne({userıd:req.user.id});
+  let getcode = await dbcodes.findOne({_id:req.params.id});
+   
+  const History = new history({
+    islemsahipName: req.user.username,
+    islemsahipID:req.user.id,
+    islem:"Sistemden kod silindi",
+    kodkurtar: getcode.kod,
+    adminkontrol:getuser.admin,
+    islemkodu:100
+
+ })
+ History.save()
+   
+  dbcodes
+    .findByIdAndDelete(req.params.id)
+    .then((result) => {
+      res.redirect("/admin/panel/codes");
+    })
+
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+
+
+
+app.get("/admin/recovery/delete/:id", checkAuth , async (req, res) => {
+  let gethistory = await history.findOne({_id:req.params.id});
+  let getuser = await dbcodes.findOne({userıd:req.user.id});
+   
+   
+  history
+    .findByIdAndDelete(req.params.id)
+    .then((result) => {
+      res.redirect("/admin/panel");
+    })
+
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 
