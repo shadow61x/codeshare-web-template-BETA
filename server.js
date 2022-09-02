@@ -26,15 +26,15 @@ const history = require("./models/history.js");
     })
   );
 
-  mongoose.connect("wdw" , {useNewUrlParser : true , useUnifiedTopology: true})
+  mongoose.connect("URL" , {useNewUrlParser : true , useUnifiedTopology: true})
   .then((result) =>{
        console.log('mongoDB Bağlantı kuruldu');
   })
   .catch((err) => console.log(err))
   const strategy = new Strategy(
       {
-       clientID:"709847874631892992",
-          clientSecret:"bvvNUl-DHo4lX78fcX0KK-uc8N_mPkiT",
+       clientID:"clientID",
+          clientSecret:"clientSecret",
           callbackURL:"http://localhost:3000/callback",
        scope: ["identify","guilds.join","guilds"]
       },
