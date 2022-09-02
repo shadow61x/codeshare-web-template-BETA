@@ -26,7 +26,7 @@ const history = require("./models/history.js");
     })
   );
 
-  mongoose.connect("mongodb+srv://codearmy:code2009@cluster0.juzwe.mongodb.net/codearmy?retryWrites=true&w=majority" , {useNewUrlParser : true , useUnifiedTopology: true})
+  mongoose.connect("wdw" , {useNewUrlParser : true , useUnifiedTopology: true})
   .then((result) =>{
        console.log('mongoDB Bağlantı kuruldu');
   })
