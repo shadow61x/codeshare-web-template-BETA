@@ -1,0 +1,7 @@
+{
+    "server": {
+      "MONGODB":"MONGODB",
+      "clientID": "clientID",
+      "clientSecret":"clientSecret"
+    }
+  }
