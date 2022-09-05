@@ -11,6 +11,12 @@ const { Strategy } = require("passport-discord");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 
+//config
+const config = require('./config.json');
+const clientIDcf = config.server.clientID;
+const clientSecretcf = config.server.clientSecret;
+const MONGODBCF = config.server.MONGODB;
+
 //Mongodb models
 const dbuser = require("./models/user.js");
 const dbcodes = require("./models/codes.js");
@@ -26,15 +32,15 @@ const history = require("./models/history.js");
     })
   );
 
-  mongoose.connect("URL" , {useNewUrlParser : true , useUnifiedTopology: true})
+  mongoose.connect(MONGODBCF , {useNewUrlParser : true , useUnifiedTopology: true})
   .then((result) =>{
        console.log('mongoDB Bağlantı kuruldu');
   })
   .catch((err) => console.log(err))
   const strategy = new Strategy(
       {
-       clientID:"clientID",
-          clientSecret:"clientSecret",
+       clientID:clientIDcf,
+          clientSecret:clientSecretcf,
           callbackURL:"http://localhost:3000/callback",
        scope: ["identify","guilds.join","guilds"]
       },
