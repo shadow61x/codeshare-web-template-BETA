@@ -107,8 +107,9 @@
                                                 <td><%= b.ktp %></td>
                                             
                                                 <td class="text-center">
-                                                    <button onclick="window.location.href='/admin/editcode/<%= b.code %>'" class="btn btn-success btn-sm">Edit</button>
-                                                    <button onclick="window.location.href='/admin/codes/delete/<%= b._id %>'" class="btn btn-danger btn-sm">Delete</button>
+                                                    <button onclick="window.location.href='/admin/editcode/<%= b.code %>'" class="btn btn-success btn-sm">Düzenle</button>
+                                                    <button onclick="window.location.href='/codes/<%= b._id %>'" class="btn btn-success btn-sm">Görüntüle</button>
+                                                    <button onclick="window.location.href='/admin/codes/delete/<%= b._id %>'" class="btn btn-danger btn-sm">Sil</button>
                                                 </td>
                                             </tr>
                                             <% }) %>

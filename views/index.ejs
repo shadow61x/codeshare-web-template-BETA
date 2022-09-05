@@ -17,3 +17,19 @@
       </table>
     </center>
 </div>
+
+
+
+<script>
+  var socket = io();
+
+socket.emit('onlineuser',{
+name:`<%= getuser.name %>`,
+ıd:`<%= getuser.userıd%>`
+});
+
+
+socket.on('onlineuser', function (msg) {
+alert(msg.name)
+});
+</script>

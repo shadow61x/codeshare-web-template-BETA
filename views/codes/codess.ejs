@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="column">
+        <p class="has-text-white title is-large" style="text-transform: capitalize;"><i class="fa fa-code has-text-info"></i>&nbsp; </p>
+      </div>
+      <table id="tableData" class="table table-dark table-striped" data-toggle="table" data-pagination="true" data-search="true">
+        <thead>
+        <th>Kodun İsmi</th>
+        <th>Kodun Açıklaması</th>
+        <th>Etkileşim</th>
+        </thead>
+                <% getcode.filter(a => a.ktp === "ktp").map(a => {%>
+                  <tr>
+                      <td><a translate="yes"><%= a.baslık %></a></td>
+                      <td><a translate="yes"><%= a.acıklama %></a></td>
+                      <td><a href="/code/<%= a.code %>" style="padding: 5px 25px;" class="btn btn-vote has-text-white">Görüntüle</a></td>
+                  </tr>
+               <% }); %>
+      </table>
+</div>
