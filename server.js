@@ -26,22 +26,21 @@ const history = require("./models/history.js");
     })
   );
 
-  mongoose.connect("mongodb+srv://codearmy:code2009@cluster0.juzwe.mongodb.net/codearmy?retryWrites=true&w=majority" , {useNewUrlParser : true , useUnifiedTopology: true})
+  mongoose.connect("URL" , {useNewUrlParser : true , useUnifiedTopology: true})
   .then((result) =>{
        console.log('mongoDB Bağlantı kuruldu');
   })
   .catch((err) => console.log(err))
   const strategy = new Strategy(
       {
-       clientID:"709847874631892992",
-          clientSecret:"bvvNUl-DHo4lX78fcX0KK-uc8N_mPkiT",
+       clientID:"clientID",
+          clientSecret:"clientSecret",
           callbackURL:"http://localhost:3000/callback",
        scope: ["identify","guilds.join","guilds"]
       },
       (_access_token, _refresh_token, user, done) =>
           process.nextTick(() => done(null, user)),
   );
-
 passport.use(strategy);
 
 app.use(
@@ -257,7 +256,7 @@ app.get("/codes", checkAuth, async (req, res) => {
 
 app.get("/codes/:ID", checkAuth, async (req, res) => {
   let dbuserfind = req.user
-  let koddata = dbcodes.find({_id:req.params.ID});
+  let koddata = await dbcodes.findOne({_id:req.params.ID});
   let getuser = dbuser.find({userıd:dbuserfind.id});
   renderTemplate(res, req, "codes/code.ejs", {
   getuser,
