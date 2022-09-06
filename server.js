@@ -11,6 +11,11 @@ const { Strategy } = require("passport-discord");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 
+
+// api/system
+const userapi = require("./system/userapi.js");
+
+
 //config
 const config = require('./config.json');
 const clientIDcf = config.server.clientID;
@@ -21,6 +26,7 @@ const MONGODBCF = config.server.MONGODB;
 const dbuser = require("./models/user.js");
 const dbcodes = require("./models/codes.js");
 const history = require("./models/history.js");
+const user = require('./models/user.js');
 
   passport.serializeUser((user, done) => done(null, user));
   passport.deserializeUser((user, done) => done(null, user));
@@ -156,11 +162,11 @@ app.get("/panel/:ID", checkAuth, async (req, res) => {
 
 // ADMİN PANEL //
 app.get("/admin/panel", checkAuth, async (req, res) => {
-  let dbuserfind = req.user
+  let usercheck = await userapi.admincontrol(req.user.id);
   let codedata = await dbcodes.find();
   let historydata = await history.find();
-  let getuser = await dbuser.findOne({userıd:dbuserfind.id});
-  if(getuser.admin == false)
+  let getuser = await dbuser.findOne({userıd:req.user.id});
+  if(usercheck == false)
   {
     res.redirect("/admin/err");
   }
@@ -178,10 +184,10 @@ app.get("/admin/panel", checkAuth, async (req, res) => {
 
 
 app.get("/admin/panel/codes", checkAuth, async (req, res) => {
-  let dbuserfind = req.user
+  let getuser = await dbuser.findOne({userıd:req.user.id});
+  let usercheck = await userapi.admincontrol(req.user.id);
   let codedata = await dbcodes.find();
-  let getuser = await dbuser.findOne({userıd:dbuserfind.id});
-  if(getuser.admin == false)
+  if(usercheck == false)
   {
     res.redirect("/admin/err");
   }
@@ -195,9 +201,9 @@ app.get("/admin/panel/codes", checkAuth, async (req, res) => {
 });
 
 app.get("/admin/panel/codes/add", checkAuth, async (req, res) => {
-  let dbuserfind = req.user
-  let getuser = await dbuser.findOne({userıd:dbuserfind.id});
-  if(getuser.admin == false)
+  let usercheck = await userapi.admincontrol(req.user.id);
+  let getuser = await dbuser.findOne({userıd:req.user.id});
+  if(usercheck == false)
   {
     res.redirect("/admin/err");
   }
@@ -212,10 +218,10 @@ app.get("/admin/panel/codes/add", checkAuth, async (req, res) => {
 });
 
 app.get("/admin/panel/codes/edit/:id", checkAuth, async (req, res) => {
-  let dbuserfind = req.user
+  let usercheck = await userapi.admincontrol(req.user.id);
   let codedata = await dbcodes.find({_id:req.params.id});
-  let getuser = await dbuser.findOne({userıd:dbuserfind.id});
-  if(getuser.admin == false)
+  let getuser = await dbuser.findOne({userıd:req.user.id});
+  if(usercheck == false)
   {
     res.redirect("/admin/err");
   }
@@ -232,10 +238,9 @@ app.get("/admin/panel/codes/edit/:id", checkAuth, async (req, res) => {
 
 
 app.get("/admin/panel/codes/recovery/:id", checkAuth, async (req, res) => {
-  let dbuserfind = req.user
-  let getuser = await dbuser.findOne({userıd:dbuserfind.id});
+  let usercheck = await userapi.admincontrol(req.user.id);
   let recovery = await history.findOne({_id: req.params.id})
-  if(getuser.admin == false)
+  if(usercheck == false)
   {
     res.redirect("/admin/err");
   }else{
@@ -366,6 +371,8 @@ app.get("/admin/recovery/delete/:id", checkAuth , async (req, res) => {
       console.log(err);
     });
 });
+
+
 
 
 app.use( ( req,res) =>{
