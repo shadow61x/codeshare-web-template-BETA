@@ -12,7 +12,7 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 
 
-// api/system
+// api/systems
 const userapi = require("./system/userapi.js");
 
 
